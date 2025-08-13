@@ -1,0 +1,36 @@
+﻿body {
+    background-image: url("../images/COPCBackground.jpg");
+    background-repeat: no-repeat;
+    background-color: #000000;
+    background-size: 100% auto;
+    background-position: bottom;
+    background-attachment: fixed;
+}
+
+.PanelUnderBackgroundText {
+    margin-top: 380px;
+}
+
+.Question h1 {
+    font-size: 4em;
+}
+
+.FeedbackButtons {
+    margin-top: 80px;
+}
+
+.FeedbackButton {
+
+}
+
+.FeedbackButtons img {
+    border: 10px solid #FFFFFF;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.qrCode {
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}

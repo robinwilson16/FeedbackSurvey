@@ -1,0 +1,37 @@
+﻿@inherits LayoutComponentBase
+
+<CascadingValue Value="this">
+    <div class="page">
+        @if (ShowNavMenu != false)
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        }
+        <main>
+            @* <div class="top-row px-4">
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            </div> *@
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
+</CascadingValue>
+
+@code {
+    public bool? ShowNavMenu { get; set; }
+
+    public void HideNav()
+    {
+        ShowNavMenu = false;
+        StateHasChanged();
+    }
+
+    public void ShowNav()
+    {
+        ShowNavMenu = true;
+        StateHasChanged();
+    }
+}

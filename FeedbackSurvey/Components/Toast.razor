@@ -1,0 +1,102 @@
+﻿<div class="toast-container position-fixed bottom-0 end-0 p-3" style="@ToastZIndex">
+
+    @if (ToastAutohide == true)
+    {
+        <div id="@ToastRef" class="toast @ToastRef" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="toast-header">
+                @Title
+
+                @if (Subtitle != null)
+                {
+                    <small>@Subtitle</small>
+                }
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @Body
+
+                @if (Footer != null)
+                {
+                    <div class="mt-2 pt-2 border-top">
+                        @Footer
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+    else 
+    {
+        <div id="@ToastRef" class="toast @ToastRef" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" style="@ToastZIndex">
+            <div class="toast-header">
+                @Title
+
+                @if (Subtitle != null)
+                {
+                    <small>@Subtitle</small>
+                }
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @Body
+
+                @if (Footer != null)
+                {
+                    <div class="mt-2 pt-2 border-top">
+                        @Footer
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+    
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? Title { get; set; }
+
+    [Parameter]
+    public RenderFragment? Subtitle { get; set; }
+
+    [Parameter]
+    public RenderFragment? Body { get; set; }
+
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
+
+    [Parameter]
+    public string? ToastRef { get; set; }
+    private string ToastClass = "";
+
+    public bool ToastAutohide { get; set; }
+
+    public string? ToastZIndex { get; set; }
+
+    public void DisableAutohide() {
+        ToastAutohide = false;
+    }
+
+    public void EnableAutohide()
+    {
+        ToastAutohide = true;
+    }
+
+    public void ShowOnTop1()
+    {
+        ToastZIndex = "z-index:1095;";
+    }
+
+    public void ShowOnTop2()
+    {
+        ToastZIndex = "z-index:1100;";
+    }
+
+    public void ShowOnTop3()
+    {
+        ToastZIndex = "z-index:1200;";
+    }
+}

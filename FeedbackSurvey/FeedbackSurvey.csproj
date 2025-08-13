@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\images\COPCBackground.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\serviceWorkerInterop.js" />
+    <None Include="wwwroot\js\toastInterop.js" />
+    <None Include="wwwroot\sounds\confirm.mp3" />
+    <None Include="wwwroot\sounds\confirm.wav" />
+    <None Include="wwwroot\sounds\error.mp3" />
+    <None Include="wwwroot\sounds\error.wav" />
+    <None Include="wwwroot\sounds\prompt.mp3" />
+    <None Include="wwwroot\sounds\question2.mp3" />
+    <None Include="wwwroot\sounds\question3.mp3" />
+    <None Include="wwwroot\sounds\question5.mp3" />
+    <None Include="wwwroot\sounds\question6.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.8" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\images\COPCBackground.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
