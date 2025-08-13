@@ -13,6 +13,7 @@ wwwroot\images\Happy5.png
 wwwroot\images\QRCodeForFeedbackForm.svg
 wwwroot\index.html
 wwwroot\js\serviceWorkerInterop.js
+wwwroot\js\speachInterop.js
 wwwroot\js\toastInterop.js
 wwwroot\lib\bootstrap-icons\bootstrap-icons.svg
 wwwroot\lib\bootstrap-icons\font\bootstrap-icons.css
@@ -2330,13 +2331,15 @@ wwwroot\sounds\question2.mp3
 wwwroot\sounds\question3.mp3
 wwwroot\sounds\question5.mp3
 wwwroot\sounds\question6.mp3
-wwwroot\js\speachInterop.js
+wwwroot\appsettings.Development.json
+wwwroot\appsettings.json
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\app.css
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\callout.css
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\FeedbackSurvey.css
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\images\QRCodeForFeedbackForm.svg
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\index.html
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\js\serviceWorkerInterop.js
+C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\js\speachInterop.js
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\js\toastInterop.js
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\lib\bootstrap-icons\bootstrap-icons.svg
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\lib\bootstrap-icons\font\bootstrap-icons.css
@@ -4549,4 +4552,5 @@ C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\manifes
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\sample-data\weather.json
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\sounds\confirm.wav
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\sounds\error.wav
-C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\js\speachInterop.js
+C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\appsettings.Development.json
+C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\appsettings.json

@@ -70,8 +70,8 @@ main[b-lx6u5uqi6g] {
         width: 0;
     }
 
-    .top-row[b-lx6u5uqi6g], article[b-lx6u5uqi6g] {
+    /*.top-row, article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
-    }
+    }*/
 }

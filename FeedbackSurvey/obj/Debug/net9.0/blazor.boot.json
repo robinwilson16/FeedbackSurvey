@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "FeedbackSurvey",
   "resources": {
-    "hash": "sha256-VQKef5z89tQoYCB7PhH2pGhASwEckINKpPk3LXjckQQ=",
+    "hash": "sha256-vM6w7eqYL02NTvWu1rQOA275gE/gshqpAf8H9MLQlhg=",
     "fingerprinting": {
       "Blazored.FluentValidation.x0xsecpmtx.wasm": "Blazored.FluentValidation.wasm",
       "FluentValidation.a26tmul8eq.wasm": "FluentValidation.wasm",
@@ -11,6 +11,10 @@
       "Microsoft.AspNetCore.Components.Web.ip3tel2wdp.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.grj5cmg1s5.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
       "Microsoft.AspNetCore.Metadata.srjvbq70j7.wasm": "Microsoft.AspNetCore.Metadata.wasm",
+      "Microsoft.EntityFrameworkCore.9wkys5jmg6.wasm": "Microsoft.EntityFrameworkCore.wasm",
+      "Microsoft.EntityFrameworkCore.Abstractions.5m7e5ktbh6.wasm": "Microsoft.EntityFrameworkCore.Abstractions.wasm",
+      "Microsoft.Extensions.Caching.Abstractions.5t0brlvd2z.wasm": "Microsoft.Extensions.Caching.Abstractions.wasm",
+      "Microsoft.Extensions.Caching.Memory.y7jzavol6r.wasm": "Microsoft.Extensions.Caching.Memory.wasm",
       "Microsoft.Extensions.Configuration.xr05dk02yv.wasm": "Microsoft.Extensions.Configuration.wasm",
       "Microsoft.Extensions.Configuration.Abstractions.2q3rnwzz6j.wasm": "Microsoft.Extensions.Configuration.Abstractions.wasm",
       "Microsoft.Extensions.Configuration.Binder.p8da152h7a.wasm": "Microsoft.Extensions.Configuration.Binder.wasm",
@@ -203,8 +207,8 @@
       "icudt_CJK.tjcz0u77k5.dat": "icudt_CJK.dat",
       "icudt_EFIGS.tptq2av103.dat": "icudt_EFIGS.dat",
       "icudt_no_CJK.lfu7j35m59.dat": "icudt_no_CJK.dat",
-      "FeedbackSurvey.i85l46l0ey.wasm": "FeedbackSurvey.wasm",
-      "FeedbackSurvey.23icbe967w.pdb": "FeedbackSurvey.pdb"
+      "FeedbackSurvey.mxij2tma5o.wasm": "FeedbackSurvey.wasm",
+      "FeedbackSurvey.dxsgq51n70.pdb": "FeedbackSurvey.pdb"
     },
     "jsModuleNative": {
       "dotnet.native.50iqa8w3ys.js": "sha256-pQdXuxfVeqYHOwd5HUM2ERd7OnXirj9JTF37b6OdTAc="
@@ -233,6 +237,10 @@
       "Microsoft.AspNetCore.Components.Web.ip3tel2wdp.wasm": "sha256-+uXtoXpMFQKIFs1SOag/WdIbA4G4Q4eGRRGFCiXIBdU=",
       "Microsoft.AspNetCore.Components.WebAssembly.grj5cmg1s5.wasm": "sha256-tChPBLUd3b2CpuaUBQ2hV/OoJbb5XPFpVtYTXo46Y+o=",
       "Microsoft.AspNetCore.Metadata.srjvbq70j7.wasm": "sha256-2HidT0I32ow5YfrM4vAJvUicfg2Vo4Eoi+DptVHr868=",
+      "Microsoft.EntityFrameworkCore.9wkys5jmg6.wasm": "sha256-SR4bGJAd3oEMr3YoVKqKqTXzp45MDDwJAh8QXLk3SOY=",
+      "Microsoft.EntityFrameworkCore.Abstractions.5m7e5ktbh6.wasm": "sha256-81wm4PxfkRmU/73de8gXMrQeaf4NWPWcrYYjfMapBf8=",
+      "Microsoft.Extensions.Caching.Abstractions.5t0brlvd2z.wasm": "sha256-J4jqqswqv1qlNZwY6c/mdLwS3bd1+NHlfcrrQH30sLM=",
+      "Microsoft.Extensions.Caching.Memory.y7jzavol6r.wasm": "sha256-8s2lHeqH86neJojQ2gljvjiZY+vc6ZaPlXLh2CavXYE=",
       "Microsoft.Extensions.Configuration.xr05dk02yv.wasm": "sha256-0+9f7KUt7EiUlYtUes59HkDRvApZYrmtIXGYxCLzedw=",
       "Microsoft.Extensions.Configuration.Abstractions.2q3rnwzz6j.wasm": "sha256-mjL5HgHF+Cdm3ucrD6EN+wSQD8HioaniVQtthpAQYSc=",
       "Microsoft.Extensions.Configuration.Binder.p8da152h7a.wasm": "sha256-d2m6d3omvAahzcHL3zC2w13VYR+3KnIqvZ0XljyLQ7U=",
@@ -416,14 +424,18 @@
       "WindowsBase.361km0836k.wasm": "sha256-FacUCEIJYTnbOWgX/R9QP2QnurqRZwRIkDAH0N9z69s=",
       "mscorlib.qiu3j3msqk.wasm": "sha256-QvztpxTOEw4aMIl7zP3QtsPLNv/IWaK5wq22J4ReGrA=",
       "netstandard.lp03u0xxi4.wasm": "sha256-WVQsxULiAiEbyXLKolS7txnWVT82SsvsuMe4jJ+SqqI=",
-      "FeedbackSurvey.i85l46l0ey.wasm": "sha256-PkZIlU1M07SI/uMzhOZQoaZj2FcxdPKHiT8PMl2nq8o="
+      "FeedbackSurvey.mxij2tma5o.wasm": "sha256-mpxkF+loGUsWXarhC5BavzNbkM7HJupt3/yoXUwCJWo="
     },
     "pdb": {
-      "FeedbackSurvey.23icbe967w.pdb": "sha256-jtkbKz18R3JMKtLAZApgVvavUz8jEQD1GDQnJKNrS8Y="
+      "FeedbackSurvey.dxsgq51n70.pdb": "sha256-j6sWqV+AFrS6Clv0ChR8ryxt3l+1IwqpTjwUCeCKm6I="
     }
   },
   "cacheBootResources": true,
   "debugLevel": -1,
+  "appsettings": [
+    "../appsettings.Development.json",
+    "../appsettings.json"
+  ],
   "globalizationMode": "sharded",
   "extensions": {
     "blazor": {}
