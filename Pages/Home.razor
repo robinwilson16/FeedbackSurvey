@@ -1,0 +1,527 @@
+﻿@page "/"
+
+@using FeedbackSurvey.Components;
+@using FeedbackSurvey.Models;
+@using FeedbackSurvey.Shared;
+@using System.Timers;
+@using System.Reflection;
+@using System.Net
+
+@inject HttpClient Http
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Home</PageTitle>
+
+<audio src="@SoundEffect" autoplay></audio>
+
+<Modal @ref="modalInfo">
+    <WindowControls>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="() => modalInfo!.Close()"></button>
+    </WindowControls>
+    <Title><i class="fa-solid fa-circle-info"></i> @msgInfoTitle</Title>
+    <Body>
+        @msgInfo
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => modalInfo!.Close()">Close</button>
+    </Footer>
+</Modal>
+
+<Modal @ref="modalError">
+    <WindowControls>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="() => modalError!.Close()"></button>
+    </WindowControls>
+    <Title><i class="fa-solid fa-triangle-exclamation"></i> @msgErrorTitle</Title>
+    <Body>
+        <div class="alert alert-danger" role="alert">
+            @msgError
+        </div>
+        @if (msgErrorStackTrace != null)
+        {
+            <p><i class="fa-solid fa-bug"></i> Stack Trace:</p>
+            <pre class="pre-scrollable ErrorDetails">@msgErrorStackTrace</pre>
+        }
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => modalError!.Close()">Close</button>
+    </Footer>
+</Modal>
+
+<Modal @ref="modalConfirm">
+    <WindowControls>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="() => modalConfirm!.Close()"></button>
+    </WindowControls>
+    <Title><i class="fa-solid fa-circle-question"></i> @msgConfirmTitle</Title>
+    <Body>
+        <p>
+            @msgConfirm
+        </p>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-danger" @onclick="FormAction"><i class="fa-solid fa-trash"></i> Yes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => modalConfirm!.Close()"><i class="fa-solid fa-right-from-bracket"></i> Cancel</button>
+    </Footer>
+</Modal>
+
+<div class="container-fluid PanelUnderBackgroundText">
+    <div class="row">
+        <div class="col-md">
+            <div class="alert alert-success Question" role="alert">
+                <h1 class="alert-heading text-center"><i class="fa-solid fa-circle-question"></i> How was your experience today at COPC?</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row FeedbackButtons" data-bs-theme="dark">
+        <div class="col-md">
+            <img src="../images/Happy5.png" class="img-fluid" alt="Great" @onclick="() => RecordFeedback(5)" />
+        </div>
+        <div class="col-md">
+            <img src="../images/Happy4.png" class="img-fluid" alt="Good" @onclick="() => RecordFeedback(4)" />
+        </div>
+        <div class="col-md">
+            <img src="../images/Happy3.png" class="img-fluid" alt="OK" @onclick="() => RecordFeedback(3)" />
+        </div>
+        <div class="col-md">
+            <img src="../images/Happy2.png" class="img-fluid" alt="Poor" @onclick="() => RecordFeedback(2)" />
+        </div>
+        <div class="col-md">
+            <img src="../images/Happy1.png" class="img-fluid" alt="Bad" @onclick="() => RecordFeedback(1)" />
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid position-fixed bottom-0 bg-body-tertiary" data-bs-theme="dark">
+    <div class="row">
+        <div class="col-md">
+            <p class="text-body-tertiary my-3">&copy; 2025 City of Portsmouth College</p>
+        </div>
+        <div class="col-md">
+            <p class="text-body-tertiary my-3 text-center">Feedback Survey @ProductVersion</p>
+        </div>
+        <div class="col-md">
+            <p class="text-body-tertiary my-3 text-end">IP Address: @IPAddress</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    //Hide navbar in layout component
+    [CascadingParameter]
+    public MainLayout? Layout { get; set; }
+
+    public string? action { get; set; }
+    public string? SoundEffect { get; set; }
+
+    public int? Rating { get; set; } = null;
+
+
+    private Timer? CountdownTimerForModal;
+    private Timer? CountdownTimerForSoundEffect;
+    private Timer? CountdownTimerForWelcomeMsg;
+    private int? SecondsToCountdown = 10;
+    private int? SecondsToResetSoundEffect = 2;
+    private int? SecondsToRepeatWelcomeMsg = 60;
+    private int? CountdownInSecondsForModal;
+    private int? CountdownInSecondsForSoundEffect;
+    private int? CountdownInSecondsForWelcomeMsg;
+    private string? FeedbackMessageText { get; set; }
+
+    private string? ProductVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+    private string? IPAddress { get; set; }
+
+    //Modals
+    private Modal? modalInfo { get; set; }
+    public string? msgInfoTitle = null;
+    public MarkupString? msgInfo = null;
+
+    private Modal? modalError { get; set; }
+    public string? msgErrorTitle = null;
+    public MarkupString? msgError = null;
+    public string? msgErrorStackTrace = null;
+
+    private Modal? modalConfirm { get; set; }
+    public string? msgConfirmTitle = null;
+    public MarkupString? msgConfirm = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Layout != null)
+        {
+            Layout.HideNav();
+        }
+
+        IPAddress = await GetIPAddress();
+
+        await PlayWelcomeMessage();
+        StartTimerForWelcomeMsg();
+    }
+
+    private async Task FormAction()
+    {
+        //Determine what clear form button should do on dialog box
+
+        if (action == "RemoveFeedback")
+        {
+            //For future use, if needed
+        }
+        else
+        {
+            action = "Error";
+            PlaySoundEffect(SoundFunctions.GetErrorSound());
+
+            msgErrorTitle = $"Invalid Action";
+            msgError = (MarkupString)$"An invalid option was specified. Please try again.";
+            msgErrorStackTrace = null;
+
+            modalError!.Open();
+        }
+    }
+
+    private async Task RecordFeedback(int rating)
+    {
+        //Stop any timers
+        StopTimerForWelcomeMsg();
+
+        Rating = rating;
+        //Console.WriteLine($"Feedback recorded with rating: {rating}");
+
+        //Set Feedback message based on rating
+        switch(rating)
+        {
+            case 5:
+                FeedbackMessageText = $"Thank you for your positive feedback! We're glad you had a great experience.";
+                break;
+            case 4:
+                FeedbackMessageText = $"Thank you for your feedback! We're happy to hear you had a good experience.";
+                break;
+            case 3:
+                FeedbackMessageText = $"Thank you for your feedback! We hope to improve your experience next time.";
+                break;
+            case 2:
+                FeedbackMessageText = $"Thank you for your feedback! We're sorry to hear that your experience was poor.";
+                break;
+            case 1:
+                FeedbackMessageText = $"Thank you for your feedback! We're disappointed to hear that your experience was bad.";
+                break;
+            default:
+                FeedbackMessageText = $"Thank you for your feedback!";
+                break;
+        };
+
+        APIResultModel? apiResult = await SaveFeedback();
+
+        if (apiResult.IsSuccessful != true)
+        {
+            action = "Error";
+            PlaySoundEffect(SoundFunctions.GetErrorSound());
+            msgErrorTitle = $"Error Saving Feedback";
+            msgError = (MarkupString)$"An error occurred while trying to save your feedback. Please try again later.";
+            msgErrorStackTrace = apiResult.StackTrace;
+            modalError!.Open();
+
+            await PlayErrorMessage();
+            return;
+        }
+        else
+        {
+            action = "ShowThankyou";
+            PlaySoundEffect(SoundFunctions.GetConfirmSound());
+
+            msgInfoTitle = $"Thank You For Your Feedback";
+            msgInfo = FeedbackMessage(FeedbackMessageText, CountdownInSecondsForModal);
+            modalInfo!.MakeLarge();
+
+            modalInfo!.Open();
+
+            await PlayThankYouMessage();
+
+            HideMessageTimed();
+        }
+    }
+
+    private void HideMessageTimed()
+    {
+        CountdownInSecondsForModal = SecondsToCountdown;
+        StartTimerForModal();
+    }
+
+    public void StartTimerForModal()
+    {
+        CountdownTimerForModal = new System.Timers.Timer(1000);
+        CountdownTimerForModal.Elapsed += CountDownTimerModalAndHideMessage;
+        CountdownTimerForModal.Enabled = true;
+    }
+
+    public void StopTimerForModal()
+    {
+        if (CountdownTimerForModal != null)
+        {
+            CountdownTimerForModal.Enabled = false;
+            CountdownTimerForModal.Stop();
+            CountdownTimerForModal.Dispose();
+        }
+    }
+
+    public void CountDownModalTimer(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (CountdownInSecondsForModal > 0)
+        {
+            CountdownInSecondsForModal -= 1;
+        }
+        else
+        {
+            StopTimerForModal();
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void CountDownTimerModalAndHideMessage(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (CountdownInSecondsForModal > 0)
+        {
+            CountdownInSecondsForModal -= 1;
+            msgInfo = FeedbackMessage(FeedbackMessageText, CountdownInSecondsForModal);
+        }
+        else
+        {
+            StopTimerForModal();
+
+            //Close message modal
+            modalInfo!.Close();
+            //SoundEffect = string.Empty;
+            InvokeAsync(async () => await PlayWelcomeMessage());
+            StartTimerForWelcomeMsg();
+
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void StartTimerForWelcomeMsg()
+    {
+        StopTimerForWelcomeMsg();
+
+        CountdownInSecondsForWelcomeMsg = SecondsToRepeatWelcomeMsg;
+
+        CountdownTimerForWelcomeMsg = new System.Timers.Timer(1000);
+        CountdownTimerForWelcomeMsg.Elapsed += CountdownTimerForWelcomeMsgCount;
+        CountdownTimerForWelcomeMsg.Enabled = true;
+    }
+
+    public void StopTimerForWelcomeMsg()
+    {
+        if (CountdownTimerForWelcomeMsg != null)
+        {
+            CountdownTimerForWelcomeMsg.Enabled = false;
+            CountdownTimerForWelcomeMsg.Stop();
+            CountdownTimerForWelcomeMsg.Dispose();
+        }
+    }
+
+    public void CountdownTimerForWelcomeMsgCount(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (CountdownInSecondsForWelcomeMsg > 0)
+        {
+            CountdownInSecondsForWelcomeMsg -= 1;
+        }
+        else
+        {
+            InvokeAsync(async () => await PlayWelcomeMessage());
+            StartTimerForWelcomeMsg();
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    public MarkupString? FeedbackMessage(string? feedbackMessageText, int? timeLeft)
+    {
+        MarkupString? timeLeftMessage = (MarkupString)$@"
+            <div class=""alert alert-warning"" role=""alert"">
+                <h3><i class=""fa-solid fa-triangle-exclamation""></i> Returning To Main Screen in <strong>{timeLeft}</strong> Seconds</h3>
+            </div>
+            <div class=""alert alert-primary"" role=""alert"">
+                <h1>
+    {feedbackMessageText}
+                </h1>
+            </div>
+            <p>
+                Want to leave us more feedback? Scan this QR code on your phone and tell us more about your experience:
+            </p>
+            <div class=""row"">
+                <div class=""col-md text-center"">
+                    <div class=""qrCode"">
+                        <img src=""../images/QRCodeForFeedbackForm.svg"" class=""img-fluid"" alt=""Leave Us More Details"" />
+                    </div>
+                </div>
+            </div>
+            ";
+
+        return timeLeftMessage;
+    }
+
+    private void PlaySoundEffect(string soundEffect)
+    {
+        CountdownInSecondsForSoundEffect = SecondsToResetSoundEffect;
+        
+        CountdownTimerForSoundEffect = new System.Timers.Timer(1000);
+        CountdownTimerForSoundEffect.Elapsed += CountdownTimerForSoundEffectCount;
+        CountdownTimerForSoundEffect.Enabled = true;
+        
+        SoundEffect = soundEffect;
+    }
+
+    public void CountdownTimerForSoundEffectCount(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (CountdownInSecondsForSoundEffect > 0)
+        {
+            CountdownInSecondsForSoundEffect -= 1;
+        }
+        else
+        {
+            SoundEffect = string.Empty;
+        }
+    }
+
+    private async Task PlayWelcomeMessage()
+    {
+        await JSRuntime.InvokeVoidAsync("speachInterop.sayWelcomeMessage");
+    }
+
+    private async Task PlayThankYouMessage()
+    {
+        await JSRuntime.InvokeVoidAsync("speachInterop.sayThankYouMessage");
+    }
+
+    private async Task PlayErrorMessage()
+    {
+        await JSRuntime.InvokeVoidAsync("speachInterop.sayErrorMessage");
+    }
+
+    public async Task<string> GetIPAddress()
+    {
+        string ipAddressEndPoint = $"{Configuration["APIEndpoint"]}/IPAddress";
+        IPAddressModel? ipAddress = new IPAddressModel();
+        string ipAddressString = string.Empty;
+
+        bool? isError = false;
+
+        try
+        {
+            ipAddress = await Http.GetFromJsonAsync<IPAddressModel>(ipAddressEndPoint);
+        }
+        catch (HttpRequestException ex)
+        {
+            isError = true;
+            action = "Error";
+            PlaySoundEffect(SoundFunctions.GetErrorSound());
+            HandleJsonException(ex);
+        }
+
+        if (isError != true)
+        {
+            ipAddressString = ipAddress?.IPAddress ?? "Unknown IP Address";
+        }
+
+        return ipAddressString;
+    }
+
+    public async Task<APIResultModel> SaveFeedback()
+    {
+        string feedbackEndPoint = $"{Configuration["APIEndpoint"]}/Feedback";
+        FeedbackModel? feedbackToAdd = new FeedbackModel()
+        {
+            FeedbackDate = DateTime.Now,
+            Rating = Rating == null? new FeedbackRating() : (FeedbackRating)Rating,
+            IPAddress = IPAddress
+        };
+
+        FeedbackModel? addedFeedback = new FeedbackModel();
+
+        APIResultModel? apiResult = new APIResultModel();
+        HttpResponseMessage formResponse = new HttpResponseMessage();
+
+        try
+        {
+            formResponse = await Http.PostAsJsonAsync<FeedbackModel>(feedbackEndPoint, feedbackToAdd);
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+
+            apiResult = new APIResultModel()
+            {
+                Action = APIResultAction.Add,
+                IsSuccessful = false,
+                ErrorMessage = "An error occurred while trying to save your feedback.",
+                StackTrace = ex.Message
+            };
+        }
+
+        if (formResponse.IsSuccessStatusCode != true)
+        {
+            string responseBody = await formResponse.Content.ReadAsStringAsync();
+
+            Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+
+            apiResult = new APIResultModel()
+            {
+                Action = APIResultAction.Add,
+                IsSuccessful = false,
+                ReturnCode = (int)formResponse.StatusCode,
+                ErrorMessage = "An error occurred while trying to save your feedback.",
+                StackTrace = responseBody
+            };
+        }
+        else
+        {
+            addedFeedback = await formResponse.Content.ReadFromJsonAsync<FeedbackModel>();
+
+            if (addedFeedback != null && addedFeedback?.Rating != null)
+            {
+                Console.WriteLine($"Feedback recorded with rating: {Rating}");
+
+                apiResult = new APIResultModel()
+                {
+                    Action = APIResultAction.Add,
+                    IsSuccessful = true
+                };
+            }
+            else
+            {
+                Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+
+                apiResult = new APIResultModel()
+                {
+                    Action = APIResultAction.Add,
+                    IsSuccessful = false,
+                    ErrorMessage = "An error occurred while trying to save your feedback."
+                };
+            }
+        }
+
+        return apiResult;
+    }
+
+    private void HandleJsonException(HttpRequestException ex)
+    {
+        string? apiErrorMsg = string.Empty;
+        
+        if (ex.Message.Contains(HttpStatusCode.Unauthorized.ToString()))
+        {
+            apiErrorMsg = $"You are not authorised to view this page";
+        }
+        else if (ex.Message.Contains("404 (Not Found)"))
+        {
+            apiErrorMsg = $"The endpoint is not valid";
+        }
+        else if (ex.Message.Contains("400 (Bad Request)"))
+        {
+            apiErrorMsg = $"The command resulted in an invalid request";
+        }
+        else
+        {
+            apiErrorMsg = $"Error: {ex.Message}";
+        }
+
+        Console.Error.WriteLine(apiErrorMsg);
+    }
+}
