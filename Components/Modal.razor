@@ -1,0 +1,95 @@
+﻿<div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;@modalZIndex" data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable @modalIsLarge" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                @WindowControls
+            </div>
+            <div class="modal-body">
+                @Body
+            </div>
+            <div class="modal-footer">
+                @Footer
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (showBackdrop == true)
+{
+    <div class="modal-backdrop fade show" style="@backdropZIndex"></div>
+}
+
+@code {
+    [Parameter]
+    public RenderFragment? WindowControls { get; set; }
+
+    [Parameter]
+    public RenderFragment? Title { get; set; }
+
+    [Parameter]
+    public RenderFragment? Body { get; set; }
+
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
+
+    private string modalDisplay = "none;";
+    private string modalClass = "";
+    private string modalIsLarge = "";
+    private bool showBackdrop = false;
+    private string backdropZIndex = "";
+    private string modalZIndex = "";
+
+    public void MakeLarge()
+    {
+        modalIsLarge = "modal-lg";
+    }
+
+    public void MakeNormal()
+    {
+        modalIsLarge = "";
+    }
+
+    public void Open()
+    {
+        modalDisplay = "block";
+        modalClass = "show";
+        showBackdrop = true;
+    }
+
+    public void OpenOnTop1()
+    {
+        modalDisplay = "block";
+        modalClass = "show";
+        showBackdrop = true;
+        backdropZIndex = "z-index:1060;";
+        modalZIndex = " z-index:1061;";
+    }
+
+    public void OpenOnTop2()
+    {
+        modalDisplay = "block";
+        modalClass = "show";
+        showBackdrop = true;
+        backdropZIndex = "z-index:1062;";
+        modalZIndex = " z-index:1063;";
+    }
+
+    public void OpenOnTop3()
+    {
+        modalDisplay = "block";
+        modalClass = "show";
+        showBackdrop = true;
+        backdropZIndex = "z-index:1064;";
+        modalZIndex = " z-index:1065;";
+    }
+
+    public void Close()
+    {
+        modalDisplay = "none";
+        modalClass = "";
+        showBackdrop = false;
+        backdropZIndex = "";
+        modalZIndex = "";
+    }
+}
