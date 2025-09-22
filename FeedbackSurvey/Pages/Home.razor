@@ -6,6 +6,7 @@
 @using System.Timers;
 @using System.Reflection;
 @using System.Net
+@using System.Text.Json
 
 @inject HttpClient Http
 @inject IConfiguration Configuration
@@ -151,10 +152,33 @@
             Layout.HideNav();
         }
 
-        IPAddress = await GetIPAddress();
+        bool? isError = false;
 
-        await PlayWelcomeMessage();
-        StartTimerForWelcomeMsg();
+        try
+        {
+            IPAddress = await GetIPAddress();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred while trying to retrieve the IP address of this machine.");
+            APIResultModel? apiResult = new APIResultModel();
+            apiResult = new APIResultModel()
+            {
+                Action = APIResultAction.Add,
+                IsSuccessful = false,
+                ErrorMessage = "An error occurred while trying to retrieve the IP address of this machine.",
+                StackTrace = ex.Message
+            };
+
+            await PlayErrorMessage();
+            isError = true;
+        }
+
+        if (isError != true)
+        {
+            await PlayWelcomeMessage();
+            StartTimerForWelcomeMsg();
+        }
     }
 
     private async Task FormAction()
@@ -178,7 +202,7 @@
         }
     }
 
-    private async Task RecordFeedback(int rating)
+    private async Task RecordFeedback(int? rating)
     {
         //Stop any timers
         StopTimerForWelcomeMsg();
@@ -216,7 +240,9 @@
             action = "Error";
             PlaySoundEffect(SoundFunctions.GetErrorSound());
             msgErrorTitle = $"Error Saving Feedback";
-            msgError = (MarkupString)$"An error occurred while trying to save your feedback. Please try again later.";
+            msgError = (MarkupString)$@"
+                <p>An error occurred while trying to save your feedback. Please try again later.</p>
+                <img src=""../images/NoEntrySign.png"" class=""img-fluid NoEntrySign"" alt=""No Entry Sign"" />";
             msgErrorStackTrace = apiResult.StackTrace;
             modalError!.Open();
 
@@ -361,11 +387,11 @@
     private void PlaySoundEffect(string soundEffect)
     {
         CountdownInSecondsForSoundEffect = SecondsToResetSoundEffect;
-        
+
         CountdownTimerForSoundEffect = new System.Timers.Timer(1000);
         CountdownTimerForSoundEffect.Elapsed += CountdownTimerForSoundEffectCount;
         CountdownTimerForSoundEffect.Enabled = true;
-        
+
         SoundEffect = soundEffect;
     }
 
@@ -406,9 +432,48 @@
 
         try
         {
+            //Commented out as it was not handling the error
             ipAddress = await Http.GetFromJsonAsync<IPAddressModel>(ipAddressEndPoint);
+
+            // var response = await Http.GetAsync(ipAddressEndPoint);
+
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     //ipAddress = await response.Content.ReadFromJsonAsync<IPAddressModel>();
+            // }
+            // else
+            // {
+            //     isError = true;
+            //     action = "Error";
+            //     PlaySoundEffect(SoundFunctions.GetErrorSound());
+            //     msgErrorTitle = $"Error Retrieving IP Address";
+            //     msgError = (MarkupString)$"An error occurred while trying to retrieve the IP address of this machine.";
+            //     msgErrorStackTrace = $"Status Code: {response.StatusCode}";
+            //     modalError!.Open();
+            // }
         }
         catch (HttpRequestException ex)
+        {
+            isError = true;
+            action = "Error";
+            PlaySoundEffect(SoundFunctions.GetErrorSound());
+            HandleJsonException(ex);
+        }
+        catch (NotSupportedException ex)
+        {
+            isError = true;
+            action = "Error";
+            PlaySoundEffect(SoundFunctions.GetErrorSound());
+            HandleJsonException(ex);
+        }
+        catch (JsonException ex)
+        {
+            isError = true;
+            action = "Error";
+            PlaySoundEffect(SoundFunctions.GetErrorSound());
+            HandleJsonException(ex);
+        }
+        catch (Exception ex)
         {
             isError = true;
             action = "Error";
@@ -455,37 +520,87 @@
                 StackTrace = ex.Message
             };
         }
-
-        if (formResponse.IsSuccessStatusCode != true)
+        catch (Exception ex)
         {
-            string responseBody = await formResponse.Content.ReadAsStringAsync();
-
             Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
-
             apiResult = new APIResultModel()
             {
                 Action = APIResultAction.Add,
                 IsSuccessful = false,
-                ReturnCode = (int)formResponse.StatusCode,
                 ErrorMessage = "An error occurred while trying to save your feedback.",
-                StackTrace = responseBody
+                StackTrace = ex.Message
             };
         }
-        else
+
+        if (formResponse.IsSuccessStatusCode != true)
         {
-            addedFeedback = await formResponse.Content.ReadFromJsonAsync<FeedbackModel>();
-
-            if (addedFeedback != null && addedFeedback?.Rating != null)
+            try
             {
-                Console.WriteLine($"Feedback recorded with rating: {Rating}");
+                string responseBody = await formResponse.Content.ReadAsStringAsync();
 
+                Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+
+                apiResult = new APIResultModel()
+                    {
+                        Action = APIResultAction.Add,
+                        IsSuccessful = false,
+                        ReturnCode = (int)formResponse.StatusCode,
+                        ErrorMessage = "An error occurred while trying to save your feedback.",
+                        StackTrace = responseBody
+                    };
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
                 apiResult = new APIResultModel()
                 {
                     Action = APIResultAction.Add,
-                    IsSuccessful = true
+                    IsSuccessful = false,
+                    ErrorMessage = "An error occurred while trying to save your feedback.",
+                    StackTrace = ex.Message
                 };
             }
-            else
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+                apiResult = new APIResultModel()
+                {
+                    Action = APIResultAction.Add,
+                    IsSuccessful = false,
+                    ErrorMessage = "An error occurred while trying to save your feedback.",
+                    StackTrace = ex.Message
+                };
+            }
+        }
+        else
+        {
+            try
+            {
+                addedFeedback = await formResponse.Content.ReadFromJsonAsync<FeedbackModel>();
+
+                if (addedFeedback != null && addedFeedback?.Rating != null)
+                {
+                    Console.WriteLine($"Feedback recorded with rating: {Rating}");
+
+                    apiResult = new APIResultModel()
+                    {
+                        Action = APIResultAction.Add,
+                        IsSuccessful = true
+                    };
+                }
+                else
+                {
+                    Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+
+                    apiResult = new APIResultModel()
+                    {
+                        Action = APIResultAction.Add,
+                        IsSuccessful = false,
+                        ErrorMessage = "An error occurred while trying to save your feedback."
+                    };
+                }
+            }
+            catch (HttpRequestException ex)
             {
                 Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
 
@@ -493,7 +608,19 @@
                 {
                     Action = APIResultAction.Add,
                     IsSuccessful = false,
-                    ErrorMessage = "An error occurred while trying to save your feedback."
+                    ErrorMessage = "An error occurred while trying to save your feedback.",
+                    StackTrace = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error recording feedback with rating: {Rating}");
+                apiResult = new APIResultModel()
+                {
+                    Action = APIResultAction.Add,
+                    IsSuccessful = false,
+                    ErrorMessage = "An error occurred while trying to save your feedback.",
+                    StackTrace = ex.Message
                 };
             }
         }
@@ -501,7 +628,7 @@
         return apiResult;
     }
 
-    private void HandleJsonException(HttpRequestException ex)
+    private void HandleJsonException(Exception ex)
     {
         string? apiErrorMsg = string.Empty;
         

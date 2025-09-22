@@ -1,0 +1,2 @@
+R:\FeedbackSurvey\FeedbackSurvey\obj\Release\net9.0\browser-wasm\PubTmp\Out\libman.json
+R:\FeedbackSurvey\FeedbackSurvey\obj\Release\net9.0\browser-wasm\PubTmp\Out\web.config

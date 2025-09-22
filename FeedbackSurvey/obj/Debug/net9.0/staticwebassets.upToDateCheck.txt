@@ -10,6 +10,7 @@ wwwroot\images\Happy2.png
 wwwroot\images\Happy3.png
 wwwroot\images\Happy4.png
 wwwroot\images\Happy5.png
+wwwroot\images\NoEntrySign.png
 wwwroot\images\QRCodeForFeedbackForm.svg
 wwwroot\index.html
 wwwroot\js\serviceWorkerInterop.js
@@ -2335,7 +2336,6 @@ wwwroot\appsettings.Development.json
 wwwroot\appsettings.json
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\app.css
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\callout.css
-C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\FeedbackSurvey.css
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\images\QRCodeForFeedbackForm.svg
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\index.html
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\js\serviceWorkerInterop.js
@@ -4554,3 +4554,4 @@ C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\sounds\
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\sounds\error.wav
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\appsettings.Development.json
 C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\appsettings.json
+C:\Users\robin.wilson\source\repos\FeedbackSurvey\FeedbackSurvey\wwwroot\css\FeedbackSurvey.css

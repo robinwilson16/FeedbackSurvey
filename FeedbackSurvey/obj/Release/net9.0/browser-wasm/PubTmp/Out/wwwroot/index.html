@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FeedbackSurvey</title>
+    <base href="/" />
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/callout.css" />
+    <link rel="stylesheet" href="css/FeedbackSurvey.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="FeedbackSurvey.styles.css" rel="stylesheet" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/speachInterop.js"></script>
+    <script src="js/toastInterop.js"></script>
+    <script src="js/serviceWorkerInterop.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        //navigator.serviceWorker.register('service-worker.js');
+
+        // make the whole serviceworker process into a promise so later on we can
+        // listen to it and in case new content is available a toast will be shown
+        window.isUpdateAvailable = new Promise(function (resolve, reject) {
+            // lazy way of disabling service workers while developing
+            //if ('serviceWorker' in navigator && ['localhost', '127'].indexOf(location.hostname) === -1) {
+            // register service worker file
+            navigator.serviceWorker.register(`service-worker.js`)
+                .then(reg => {
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            switch (installingWorker.state) {
+                                case 'installed':
+                                    if (navigator.serviceWorker.controller) {
+                                        // new update available
+                                        resolve(true);
+                                    } else {
+                                        // no update available
+                                        resolve(false);
+                                    }
+                                    break;
+                            }
+                        };
+                    };
+                })
+                .catch(err => console.error('[SW ERROR]', err));
+            //}
+        });
+
+        // Update:
+        // this also can be incorporated right into e.g. your run() function in angular,
+        // to avoid using the global namespace for such a thing.
+        // because the registering of a service worker doesn't need to be executed on the first load of the page.
+
+        window['isUpdateAvailable']
+            .then(isAvailable => {
+                if (isAvailable) {
+                    let toastID = "toastNewVersionAvailable"
+                    var toast = document.getElementById(toastID);
+                    if (toast) {
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
+                        toastBootstrap.show();
+                    }
+                    console.log("New version of app available - refresh to update");
+                }
+            });
+
+    </script>
+</body>
+
+</html>

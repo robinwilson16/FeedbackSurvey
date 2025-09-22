@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "y7OL2Etc",
+  "version": "iYal18PR",
   "assets": [
     {
       "hash": "sha256-7zzeI9jeN/6dklGIRbAqem6ww9IHobSSEF7qqNX1xq4=",
@@ -10,12 +10,12 @@ self.assetsManifest = {
       "url": "_framework/Blazored.FluentValidation.x0xsecpmtx.wasm"
     },
     {
-      "hash": "sha256-j6sWqV+AFrS6Clv0ChR8ryxt3l+1IwqpTjwUCeCKm6I=",
-      "url": "_framework/FeedbackSurvey.dxsgq51n70.pdb"
+      "hash": "sha256-nkxMyR/rsx/FADCMX9VKv+rTYVzxvvB7y5M6LblmU7M=",
+      "url": "_framework/FeedbackSurvey.q63xp30ma6.wasm"
     },
     {
-      "hash": "sha256-mpxkF+loGUsWXarhC5BavzNbkM7HJupt3/yoXUwCJWo=",
-      "url": "_framework/FeedbackSurvey.mxij2tma5o.wasm"
+      "hash": "sha256-9s9HYZALMYU0Uf4O3V3zY9LF9JCILXnLPGJcTGqvkJM=",
+      "url": "_framework/FeedbackSurvey.q76elpkxy9.pdb"
     },
     {
       "hash": "sha256-Dt7DBDag97mASqcSTSWerTCmGMiE8QnbGYMRbfGmqvQ=",
@@ -794,7 +794,7 @@ self.assetsManifest = {
       "url": "_framework/WindowsBase.361km0836k.wasm"
     },
     {
-      "hash": "sha256-IO0dJ7wt2cgpQSh/C8wIPgB4YFTMgylpGY2gWL1js7g=",
+      "hash": "sha256-PwOpxM5zxslQH4+GHE1mCwZO/79I7y1CdtmaXPDWP6Q=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -850,7 +850,7 @@ self.assetsManifest = {
       "url": "appsettings.Development.json"
     },
     {
-      "hash": "sha256-49Ng5FMg59vYvUnuUezRpBrx5lFfX+QK93smzBGRJIk=",
+      "hash": "sha256-l6x2ybe1gANAV2Xu5Ndr1id3168ye0PsYthqjfU/9Xc=",
       "url": "appsettings.json"
     },
     {
@@ -902,6 +902,10 @@ self.assetsManifest = {
       "url": "images/Happy5.png"
     },
     {
+      "hash": "sha256-T2n80VtfXj32gorQyLdvfD1mtx+tMe0GFAkbUmtlaCI=",
+      "url": "images/NoEntrySign.png"
+    },
+    {
       "hash": "sha256-VPagBSOakZxh3jss+n7q+Dcdt6RyGvWfQ1oGDFF7nzg=",
       "url": "images/QRCodeForFeedbackForm.svg"
     },
@@ -914,7 +918,7 @@ self.assetsManifest = {
       "url": "js/serviceWorkerInterop.js"
     },
     {
-      "hash": "sha256-yMRI0XCsJWWrUBejG7Y7ZTiDP4GuzkrRxLssB3FYUJg=",
+      "hash": "sha256-IRbSRjuaHJOLXH26e0ULQLshqK290e1jkYcFpDisV3Q=",
       "url": "js/speachInterop.js"
     },
     {
